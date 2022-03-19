@@ -1,5 +1,5 @@
 AddEventHandler('version_control:register', function(resource_name, repository, current_version, cb)
   local vc = Version(resource_name, repository, current_version)
-  table.insert( CVersions, vc )
-  cb(CVersions[#CVersions])
+  table.insert(CVersions, vc)
+  cb({success = true, obj = CVersions[#CVersions]})
 end)
