@@ -6,6 +6,8 @@ function Version(resource_name, repository, current_version)
   self.resource_name = resource_name
   self.repository = repository
   self.current_version = current_version
+  self.interval = 1000 * 60 * 60 * 24 -- 1 day
+  self.timeoutid = nil
 
   self.check = function()
     local url_check = ('https://api.github.com/repos/%s/releases/latest'):format(self.repository)
@@ -31,7 +33,26 @@ function Version(resource_name, repository, current_version)
     end)
   end
   
-  self.check()
+  self.start = function()
+    Wait(2000)
+    self.check()
+
+    self.timeoutid = VC.SetTimeout(self.interval, function()
+      self.start()
+    end)
+  end
+
+  self.stop = function()
+    VC.ClearTimeout(self.timeoutid)
+  end
+
+  self.setInterval = function(interval)
+    self.interval = interval
+    self.stop()
+    self.start()
+  end
+
+  self.start()
 
   return self
 end
