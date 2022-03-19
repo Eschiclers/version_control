@@ -30,7 +30,9 @@ function Version(resource_name, repository, current_version)
         print(('| [^5Version Control^7] [^2INFO^7] ^3Download from: ^7%s'):format(json.html_url))
         print("=======================================================")
       end
-    end)
+
+      TriggerEvent('version_control:onCheck', self.resource_name, { success = true, has_new_version = last_version > version, last_version = last_version, download_url = json.html_url })
+    end, 'GET', '', {})
   end
   
   self.start = function()
