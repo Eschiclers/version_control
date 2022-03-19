@@ -13,7 +13,7 @@ function Version(resource_name, repository, current_version)
     local url_check = ('https://api.github.com/repos/%s/releases/latest'):format(self.repository)
     PerformHttpRequest(url_check, function(code, data, headers)
       if code ~= 200 then
-        print(('[^5Version Control^7] [^1ERROR^7] Could not check latest version'))
+        print(('[^5Version Control^7] [^1ERROR^7] Could not check latest version for ' .. self.resource_name))
         return
       end
 
@@ -31,7 +31,7 @@ function Version(resource_name, repository, current_version)
         print("=======================================================")
       end
 
-      TriggerEvent('version_control:onCheck', self.resource_name, { success = true, has_new_version = last_version > version, last_version = last_version, download_url = json.html_url })
+      TriggerEvent('version_control:onCheck', self.resource_name, { has_new_version = last_version > version, last_version = last_version, download_url = json.html_url })
     end, 'GET', '', {})
   end
   
